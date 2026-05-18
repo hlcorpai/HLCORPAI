@@ -59,7 +59,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .filter-bar select,.filter-bar input{
   font-family:var(--font);font-size:13px;height:30px;padding:0 28px 0 12px;
-  border:1px solid var(--bd2);border-radius:99px;background:var(--bg);color:var(--tx);outline:none;
+  border:1px solid var(--bd2);border-radius:99px;background:var(--sur);color:var(--tx);outline:none;
   -webkit-appearance:none;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 14 14'%3E%3Cpath d='M2 5l5 5 5-5' stroke='%239a9a94' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 10px center}
@@ -372,6 +372,36 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
   font-size:13px;pointer-events:none;opacity:0;transition:opacity .3s;z-index:300}
 #toast.show{opacity:1}
 
+/* ─── Google-style filter dropdown ─── */
+.gd{position:relative;display:inline-block}
+.gd select{position:relative;z-index:1;opacity:0;cursor:pointer;display:block}
+.gd-face{
+  position:absolute;inset:0;z-index:2;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:0 10px 0 12px;
+  border:1px solid #dfe1e5;border-radius:15px;
+  background:#fff;color:#202124;
+  font-family:var(--font);font-size:13px;
+  cursor:pointer;user-select:none;white-space:nowrap;
+  transition:border-color .2s,border-radius .15s;
+}
+.gd-face:hover{border-color:#c5c7cb}
+.gd-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gd-face svg{flex-shrink:0;color:#5f6368;transition:transform .2s cubic-bezier(.4,0,.2,1)}
+.gd.open .gd-face{border-color:#1a73e8;border-bottom-color:transparent;border-radius:15px 15px 0 0}
+.gd.open .gd-face svg{transform:rotate(180deg)}
+.gd-list{
+  display:none;position:absolute;
+  top:100%;left:0;min-width:100%;width:max-content;
+  background:#fff;border:1px solid #1a73e8;border-top:none;
+  border-radius:0 0 15px 15px;overflow:hidden;z-index:200;
+}
+.gd.open .gd-list{display:block}
+.gd-item{padding:8px 16px;font-size:13px;color:#202124;cursor:pointer;white-space:nowrap;transition:background .1s}
+.gd-item:hover{background:#f1f3f4}
+.gd-item.sel{color:#1a73e8;font-weight:600}
+.gd-item:last-child{padding-bottom:12px}
+
 @media print{
   #row2 .filter-bar,#row2 .stats-bar .stat-chip,
   .btn-add-proj,.btn-add-task,.btn-del,.pdel,.padd,.hd-btn{display:none!important}
@@ -410,16 +440,34 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
     <div class="stat-chip"><span class="stat-n c-red">4</span><span class="stat-l">延誤</span></div>
     <div class="stat-chip"><span class="stat-n c-gray">3</span><span class="stat-l">待辦</span></div></div>
   <div class="filter-bar">
-    <select id="f-proj" onchange="applyFilters()"><option value="">全部專案</option>
-    <option value="__admin">事務性作業</option><option value="GX5">GX5 四連桿避震座管</option><option value="EX">EX3/EX4/EX6 電動升降座管模組</option></select>
-    <select id="f-person" onchange="applyFilters()"><option value="">全部負責人</option><option value="Daisy">Daisy</option><option value="振賢">振賢</option><option value="旻頡">旻頡</option><option value="暉中">暉中</option></select>
-    <select id="f-status" onchange="applyFilters()">
-      <option value="">全部狀態</option>
-      <option value="待辦">待辦</option>
-      <option value="進行中">進行中</option>
-      <option value="延誤">延誤</option>
-      <option value="完成">完成</option>
-    </select>
+    <div class="gd" id="gd-proj">
+      <select id="f-proj" onchange="applyFilters()"><option value="">全部專案</option>
+      <option value="__admin">事務性作業</option><option value="GX5">GX5 四連桿避震座管</option><option value="EX">EX3/EX4/EX6 電動升降座管模組</option></select>
+      <div class="gd-face" onclick="gdToggle('gd-proj')"><span class="gd-label">全部專案</span><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="gd-list" id="gd-proj-list"></div>
+    </div>
+    <div class="gd" id="gd-person">
+      <select id="f-person" onchange="applyFilters()"style="min-width:110px"><option value="">全部負責人</option><option value="Daisy">Daisy</option><option value="振賢">振賢</option><option value="旻頡">旻頡</option><option value="暉中">暉中</option></select>
+      <div class="gd-face" onclick="gdToggle('gd-person')"><span class="gd-label">全部負責人</span><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="gd-list" id="gd-person-list"></div>
+    </div>
+    <div class="gd" id="gd-status">
+      <select id="f-status" onchange="applyFilters()" style="width:96px">
+        <option value="">全部狀態</option>
+        <option value="待辦">待辦</option>
+        <option value="進行中">進行中</option>
+        <option value="延誤">延誤</option>
+        <option value="完成">完成</option>
+      </select>
+      <div class="gd-face" onclick="gdToggle('gd-status')"><span class="gd-label">全部狀態</span><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="gd-list">
+        <div class="gd-item sel" onclick="gdPick('gd-status','f-status','','全部狀態')">全部狀態</div>
+        <div class="gd-item" onclick="gdPick('gd-status','f-status','待辦','待辦')">待辦</div>
+        <div class="gd-item" onclick="gdPick('gd-status','f-status','進行中','進行中')">進行中</div>
+        <div class="gd-item" onclick="gdPick('gd-status','f-status','延誤','延誤')">延誤</div>
+        <div class="gd-item" onclick="gdPick('gd-status','f-status','完成','完成')">完成</div>
+      </div>
+    </div>
     <input type="text" id="f-search" placeholder="搜尋任務、負責人…" oninput="applyFilters()">
     <button class="btn-clr" onclick="clearFilters()">清除</button>
   </div>
@@ -2741,6 +2789,12 @@ function clearFilters(){
   ["f-proj","f-person","f-status"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("f-search").value="";
   activeFilters={proj:"",person:"",status:"",search:""};
+  const labels={"gd-proj":"全部專案","gd-person":"全部負責人","gd-status":"全部狀態"};
+  Object.entries(labels).forEach(([id,txt])=>{
+    const btn=document.querySelector(`#${id} .gd-label`);
+    if(btn) btn.textContent=txt;
+    document.querySelectorAll(`#${id} .gd-item`).forEach((el,i)=>el.classList.toggle('sel',i===0));
+  });
   renderAll();
 }
 function taskVisible(t){
@@ -2774,6 +2828,7 @@ function updateStatsAndFilters(){
     <option value="__admin">事務性作業</option>`+
     PROJECTS.map(p=>`<option value="${p.id}">${p.name}</option>`).join("");
   psel.value=pval;
+  _gdBuild('gd-proj','f-proj',[{v:'',l:'全部專案'},{v:'__admin',l:'事務性作業'},...PROJECTS.map(p=>({v:p.id,l:p.name}))]);
 
   /* rebuild person filter */
   const persons=[...new Set(TASKS.flatMap(t=>t.persons))].sort();
@@ -2782,6 +2837,7 @@ function updateStatsAndFilters(){
   persel.innerHTML=`<option value="">全部負責人</option>`+
     persons.map(p=>`<option value="${p}">${p}</option>`).join("");
   persel.value=perval;
+  _gdBuild('gd-person','f-person',[{v:'',l:'全部負責人'},...persons.map(p=>({v:p,l:p}))]);
 }
 
 /* ═══════════════════════════════════════
@@ -3372,6 +3428,41 @@ document.addEventListener("click", function(e){
   if(!e.target.closest(".deliv-chip")){
     document.querySelectorAll(".deliv-popup.show").forEach(p=>p.classList.remove("show"));
   }
+});
+
+/* ─── Google-style filter dropdown ─── */
+function gdToggle(wrapId){
+  const wrap=document.getElementById(wrapId);
+  if(!wrap) return;
+  const isOpen=wrap.classList.contains('open');
+  document.querySelectorAll('.gd.open').forEach(el=>{if(el!==wrap)el.classList.remove('open');});
+  if(!isOpen){
+    if(wrapId==='gd-proj')   _gdBuild('gd-proj','f-proj',[{v:'',l:'全部專案'},{v:'__admin',l:'事務性作業'},...PROJECTS.map(p=>({v:p.id,l:p.name}))]);
+    if(wrapId==='gd-person') _gdBuild('gd-person','f-person',[{v:'',l:'全部負責人'},...[...new Set(TASKS.flatMap(t=>t.persons))].sort().map(p=>({v:p,l:p}))]);
+  }
+  wrap.classList.toggle('open',!isOpen);
+}
+function _gdBuild(wrapId,selId,opts){
+  const list=document.querySelector(`#${wrapId} .gd-list`);
+  if(!list) return;
+  const cur=document.getElementById(selId)?.value||'';
+  list.innerHTML=opts.map(o=>
+    `<div class="gd-item${o.v===cur?' sel':''}" onclick="gdPick('${wrapId}','${selId}','${o.v}','${o.l}')">${o.l}</div>`
+  ).join('');
+}
+function gdPick(wrapId,selId,value,label){
+  const wrap=document.getElementById(wrapId);
+  const sel=document.getElementById(selId);
+  if(!wrap||!sel) return;
+  wrap.querySelector('.gd-label').textContent=label;
+  wrap.querySelectorAll('.gd-item').forEach(el=>el.classList.toggle('sel',el.textContent===label));
+  sel.value=value;
+  sel.dispatchEvent(new Event('change'));
+  wrap.classList.remove('open');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.gd'))
+    document.querySelectorAll('.gd.open').forEach(el=>el.classList.remove('open'));
 });
 
 </script>
