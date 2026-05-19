@@ -3045,13 +3045,14 @@ function taskRowHTML(t){
   ).join("")}<button class="padd" onclick="addPerson(this,${t.id})">+</button></div>`;
   const roleIco=t.role?`<div class="role-icon ${roleIconCls(t.role)}" style="width:12px;height:12px;flex-shrink:0;margin-top:3px"></div>`:"";
 
+  const toHtml = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   return `<div class="tp-row" data-tid="${t.id}">
     <div class="tp-cell col-task ed" style="display:flex;gap:5px" contenteditable="false">
       ${roleIco}<div contenteditable="true" spellcheck="false"
-         data-id="${t.id}" data-f="task" onblur="saveF(this)" style="flex:1">${t.task}</div>
+         data-id="${t.id}" data-f="task" onblur="saveF(this)" style="flex:1">${toHtml(t.task)}</div>
     </div>
     <div class="tp-cell col-detail ed" contenteditable="true" spellcheck="false"
-         data-id="${t.id}" data-f="detail" onblur="saveF(this)">${t.detail||""}</div>
+         data-id="${t.id}" data-f="detail" onblur="saveF(this)">${toHtml(t.detail)}</div>
     <div class="tp-cell col-person">${pw}</div>
     <div class="tp-cell col-due">
       <div class="ed ${dc}" contenteditable="true" spellcheck="false"
@@ -3112,7 +3113,15 @@ function confirmAdd(projId,phaseId,uid,containerId,delivId){
 function saveF(el){
   const t=TASKS.find(x=>x.id===parseInt(el.dataset.id));
   if(t){
-    let v=el.innerText.trim();
+    let v = el.innerHTML
+      .replace(/<div><br><\/div>/gi,'\n')
+      .replace(/<div>(.*?)<\/div>/gi,'\n$1')
+      .replace(/<br\s*\/?>/gi,'\n')
+      .replace(/&nbsp;/g,' ')
+      .replace(/&amp;/g,'&')
+      .replace(/&lt;/g,'<')
+      .replace(/&gt;/g,'>')
+      .trim();
     if(el.dataset.f==="due"&&v==="—")v="";
     t[el.dataset.f]=v;
     if(el.dataset.f==="status") el.className="tp-cell col-due ed "+dueCls(v,t.status);
