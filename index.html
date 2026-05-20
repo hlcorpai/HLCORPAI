@@ -246,20 +246,69 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
 .padd:hover{background:var(--blue-bg);color:var(--blue-tx);transform: scale(1.1);}
 .pinp{font-family:var(--font);font-size:12px;width:56px;padding:2px 2px;border:1px solid var(--acc);border-radius:20px;outline:none;text-align:center;}
 
-/* Status select */
+/* Status select — hidden behind .ssel-wrap face */
 .ssel{
-  font-family:var(--font);font-size:12px;padding:4px 24px 4px 10px;width:100%;
-  border:1px solid var(--bd2);border-radius:99px;
-  background:var(--sur);color:var(--tx);cursor:pointer;outline:none;
-  -webkit-appearance:none;appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 14 14'%3E%3Cpath d='M2 5l5 5 5-5' stroke='%239a9a94' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 8px center
+  position:relative;z-index:1;opacity:0;cursor:pointer;
+  display:block;width:100%;
+  font-family:var(--font);font-size:12px;
+  padding:4px 0;
 }
-.ssel:focus{border-color:var(--acc)}
-.ss-todo {background-color:var(--gray-bg); color:var(--gray-tx);border-color:var(--gray-bd)}
-.ss-wip  {background-color:var(--amber-bg);color:var(--amber-tx);border-color:var(--amber-bd)}
-.ss-delay{background-color:var(--red-bg);  color:var(--red-tx);  border-color:var(--red-bd)}
-.ss-done {background-color:var(--green-bg);color:var(--green-tx);border-color:var(--green-bd)}
+.deliv-subhd-status .ssel{padding:2px 0}
+
+/* .ssel-wrap: mirrors .gd */
+.ssel-wrap{position:relative;display:inline-block;width:100%}
+.deliv-subhd-status .ssel-wrap{width:auto}
+
+/* face: mirrors .gd-face */
+.ssel-face{
+  position:absolute;inset:0;z-index:2;
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  padding:0 8px 0 10px;
+  border:1px solid #dfe1e5;border-radius:15px;
+  font-family:var(--font);font-size:12px;
+  cursor:pointer;user-select:none;white-space:nowrap;
+  transition:border-color .2s,border-radius .15s;
+  pointer-events:none;
+}
+.ssel-face svg{flex-shrink:0;color:#5f6368;transition:transform .2s cubic-bezier(.4,0,.2,1)}
+.ssel-wrap.open .ssel-face{border-bottom-color:transparent;border-radius:15px 15px 0 0}
+.ssel-wrap.open .ssel-face svg{transform:rotate(180deg)}
+
+/* list: mirrors .gd-list */
+.ssel-list{
+  display:none;position:fixed;
+  top:0;left:0;min-width:0;width:max-content;
+  background:#fff;border:1px solid #dfe1e5;border-top:none;
+  border-radius:0 0 15px 15px;overflow:hidden;z-index:9999;
+  box-shadow:0 4px 12px rgba(0,0,0,.1)
+}
+.ssel-wrap.open .ssel-list{display:block}
+.ssel-item{
+  padding:4px 14px;font-size:12px;color:#202124;
+  cursor:pointer;white-space:nowrap;transition:background .1s
+}
+.ssel-item:hover{background:#f1f3f4}
+.ssel-item.sel{font-weight:600}
+.ssel-item:last-child{padding-bottom:6px}
+
+/* colour states on face */
+.ssel-face.ss-todo {background-color:var(--gray-bg); color:var(--gray-tx);border-color:var(--gray-bd)}
+.ssel-face.ss-wip  {background-color:var(--amber-bg);color:var(--amber-tx);border-color:var(--amber-bd)}
+.ssel-face.ss-delay{background-color:var(--red-bg);  color:var(--red-tx); border-color:var(--red-bd)}
+.ssel-face.ss-done {background-color:var(--green-bg);color:var(--green-tx);border-color:var(--green-bd)}
+.ssel-wrap.open .ssel-face.ss-todo,.ssel-wrap.open .ssel-face.ss-wip,
+.ssel-wrap.open .ssel-face.ss-delay,.ssel-wrap.open .ssel-face.ss-done{border-bottom-color:transparent}
+.ssel-wrap.open.ss-todo  .ssel-list{border-color:var(--gray-bd)}
+.ssel-wrap.open.ss-wip   .ssel-list{border-color:var(--amber-bd)}
+.ssel-wrap.open.ss-delay .ssel-list{border-color:var(--red-bd)}
+.ssel-wrap.open.ss-done  .ssel-list{border-color:var(--green-bd)}
+
+/* deliv-subhd small variant */
+.deliv-subhd-status .ssel-face{font-size:11px;padding:0 6px 0 8px}
+.deliv-subhd-status .ssel-item{font-size:11px;padding:5px 12px}
+
+/* keep legacy ss-* on <select> element harmless */
+.ss-todo,.ss-wip,.ss-delay,.ss-done{}
 
 /* Deliverable status select (in task panel, hidden normally, shown in edit) */
 .dsel{
@@ -269,10 +318,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
 }
 
 /* Due colours */
-.due-ok  {color:var(--tx2)}
-.due-late{color:var(--red-tx);font-weight:600}
-.due-near{color:var(--amber-tx);font-weight:600}
-.due-none{color:var(--tx3)}
+.due-ok,.due-late,.due-near,.due-none{color:var(--tx2);font-weight:normal}
 
 /* Delete btn */
 .btn-del{display: inline-flex;align-items: center;justify-content: center;width: 20px;height: 20px;padding: 0;font-family: var(--font);font-size: 11px;line-height: 1;border-radius: 50%;border: 1px solid var(--red-bd);background: transparent;color: var(--red-tx);cursor: pointer;transition: all 0.2s ease;}
@@ -316,7 +362,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
 .deliv-subhd-icon.ri-review{clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);background:#bbb;border-radius:0}
 .deliv-subhd-label{font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.2px}
 .deliv-subhd-status{margin-left:6px}
-.deliv-subhd-status .ssel{font-size:11px;padding:2px 5px;width:auto}
+/* .deliv-subhd-status .ssel — sizing handled by .ssel-wrap small variant above */
 .btn-subhd-add{
   font-family:var(--font);font-size:11px;padding:2px 8px;
   border-radius:var(--r);border:1px dashed var(--bd2);background:transparent;
@@ -397,10 +443,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
   border-radius:0 0 15px 15px;overflow:hidden;z-index:200;
 }
 .gd.open .gd-list{display:block}
-.gd-item{padding:8px 16px;font-size:13px;color:#202124;cursor:pointer;white-space:nowrap;transition:background .1s}
+.gd-item{padding:5px 16px;font-size:13px;color:#202124;cursor:pointer;white-space:nowrap;transition:background .1s}
 .gd-item:hover{background:#f1f3f4}
 .gd-item.sel{color:#1a73e8;font-weight:600}
-.gd-item:last-child{padding-bottom:12px}
+.gd-item:last-child{padding-bottom:8px}
 
 @media print{
   #row2 .filter-bar,#row2 .stats-bar .stat-chip,
@@ -3473,6 +3519,123 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('.gd'))
     document.querySelectorAll('.gd.open').forEach(el=>el.classList.remove('open'));
 });
+
+
+/* ─── .ssel → .gd-style wrapper ─── */
+const CHEVRON_SVG=`<svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function _sselColorCls(cls){const m=cls.match(/\bss-\w+\b/);return m?m[0]:'';}
+
+function _wrapSsel(sel){
+  if(sel.closest('.ssel-wrap')) return;
+  const colorCls=_sselColorCls(sel.className);
+  const curLabel=sel.options[sel.selectedIndex]?.text||'';
+
+  const wrap=document.createElement('div');
+  wrap.className='ssel-wrap'+(colorCls?' '+colorCls:'');
+
+  const face=document.createElement('div');
+  face.className='ssel-face'+(colorCls?' '+colorCls:'');
+  face.innerHTML=`<span class="ssel-label">${curLabel}</span>${CHEVRON_SVG}`;
+
+  const list=document.createElement('div');
+  list.className='ssel-list';
+  [...sel.options].forEach(o=>{
+    const item=document.createElement('div');
+    item.className='ssel-item'+(o.selected?' sel':'');
+    item.textContent=o.text;
+    item.addEventListener('click',e=>{
+      e.stopPropagation();
+      sel.value=o.value;
+      sel.dispatchEvent(new Event('change'));
+      _syncSselFace(wrap,sel);
+      wrap.classList.remove('open');
+    });
+    list.appendChild(item);
+  });
+
+  sel.parentNode.insertBefore(wrap,sel);
+  wrap.appendChild(sel);
+  wrap.appendChild(face);
+  wrap.appendChild(list);
+
+  sel.addEventListener('mousedown',e=>{
+    e.preventDefault();
+    const isOpen=wrap.classList.contains('open');
+    document.querySelectorAll('.ssel-wrap.open').forEach(w=>{if(w!==wrap)w.classList.remove('open');});
+    document.querySelectorAll('.gd.open').forEach(el=>el.classList.remove('open'));
+    if(!isOpen){
+      wrap.classList.add('open');
+      _positionSselList(wrap);
+    } else {
+      wrap.classList.remove('open');
+    }
+  });
+}
+
+function _positionSselList(wrap){
+  const list=wrap.querySelector('.ssel-list');
+  if(!list) return;
+  const zoom=parseFloat(getComputedStyle(document.body).zoom)||1;
+  const r=wrap.getBoundingClientRect();
+  list.style.left=(r.left/zoom)+'px';
+  list.style.top=(r.bottom/zoom)+'px';
+  list.style.minWidth=(r.width/zoom)+'px';
+}
+
+function _syncSselFace(wrap,sel){
+  const colorCls=_sselColorCls(sel.className);
+  const face=wrap.querySelector('.ssel-face');
+  const label=wrap.querySelector('.ssel-label');
+  if(label) label.textContent=sel.options[sel.selectedIndex]?.text||'';
+  if(face) face.className='ssel-face'+(colorCls?' '+colorCls:'');
+  wrap.className='ssel-wrap'+(colorCls?' '+colorCls:'');
+  const curVal=sel.value;
+  wrap.querySelectorAll('.ssel-item').forEach((item,i)=>{
+    item.classList.toggle('sel',sel.options[i]?.value===curVal);
+  });
+}
+
+const _origUpdateTaskStatus=updateTaskStatus;
+updateTaskStatus=function(sel){
+  _origUpdateTaskStatus(sel);
+  const wrap=sel.closest('.ssel-wrap');
+  if(wrap) _syncSselFace(wrap,sel);
+};
+
+function wrapAllSsel(){
+  document.querySelectorAll('select.ssel').forEach(_wrapSsel);
+}
+
+new MutationObserver(()=>{ wrapAllSsel(); })
+  .observe(document.getElementById('row-sections')||document.body,{childList:true,subtree:true});
+
+/* reposition fixed list on scroll or resize */
+document.addEventListener('scroll',()=>{
+  document.querySelectorAll('.ssel-wrap.open').forEach(w=>_positionSselList(w));
+},{capture:true,passive:true});
+window.addEventListener('resize',()=>{
+  document.querySelectorAll('.ssel-wrap.open').forEach(w=>_positionSselList(w));
+},{passive:true});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.ssel-wrap')&&!e.target.closest('.gd'))
+    document.querySelectorAll('.ssel-wrap.open').forEach(w=>w.classList.remove('open'));
+});
+
+wrapAllSsel();
+
+/* ─── 強制純文字貼上（作業內容 / 細項說明） ─── */
+document.addEventListener('paste', function(e){
+  const el = e.target.closest('[contenteditable="true"]');
+  if(!el) return;
+  const f = el.dataset.f;
+  if(f !== 'task' && f !== 'detail') return;
+  e.preventDefault();
+  const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+  document.execCommand('insertText', false, text);
+});
+
 
 </script>
 
