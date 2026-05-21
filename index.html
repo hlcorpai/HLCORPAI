@@ -240,9 +240,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
 .tp-cell.col-act{width:375px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-start;padding-left:8px;padding-right:12px}
 
 /* Person tags */
-.ptag{display:inline-flex;align-items:center;gap:2px;font-size:12px;padding:4px 12px;border-radius:20px;background:var(--sur2);color:var(--tx2);margin:1px}
-.pdel{font-size:10px;color:var(--red-tx);cursor:pointer;font-weight:700;margin-left: 2px;}
-.padd{display: inline-flex;align-items: center;justify-content: center;width: 18px;  height: 18px;font-size: 14px;line-height: 1;border-radius: 50%;border: 1px dashed var(--bd2);background: transparent;color: var(--tx3);cursor: pointer;padding: 0;flex-shrink: 0;}
+.ptag{position:relative;display:inline-flex;align-items:center;font-size:12px;padding:4px 26px 4px 10px;border-radius:20px;background:var(--sur2);color:var(--tx2);margin:1px}
+.pdel{
+  position:absolute;right:3px;top:50%;transform:translateY(-50%);
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:50%;
+  background:transparent;border:none;
+  font-size:10px;font-weight:700;line-height:1;
+  color:var(--tx3);cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.pdel:hover{background:var(--red-bg);color:var(--red-tx);border:none;}
+.pw{display:flex;align-items:center;flex-wrap:wrap;gap:2px}
+.padd{display: inline-flex;align-items: center;justify-content: center;width: 18px;height: 18px;font-size: 14px;line-height: 1;border-radius: 50%;border: 1px dashed var(--bd2);background: transparent;color: var(--tx3);cursor: pointer;padding: 0;flex-shrink: 0;margin-left:2px;}
 .padd:hover{background:var(--blue-bg);color:var(--blue-tx);transform: scale(1.1);}
 .pinp{font-family:var(--font);font-size:12px;width:56px;padding:2px 2px;border:1px solid var(--acc);border-radius:20px;outline:none;text-align:center;}
 
@@ -394,7 +404,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
   border:1px solid var(--bd2);border-radius:var(--r);outline:none;margin-bottom:12px}
 .modal input[type=text]:focus{border-color:var(--acc)}
 .color-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:14px}
-.cswatch{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .12s}
+.cswatch{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .12s}
 .cswatch:hover{transform:scale(1.2)}
 .cswatch.sel{border-color:#1c1c1a;transform:scale(1.2)}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px}
