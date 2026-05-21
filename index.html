@@ -79,12 +79,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
 }
 .section-hd:hover{background:var(--sur3)}
 .section-hd .s-chevron{
+  order:-1;
   width:20px;height:20px;display:flex;align-items:center;justify-content:center;
   color:var(--tx3);flex-shrink:0;
   transition:transform .25s cubic-bezier(.4,0,.2,1);
 }
 .section-wrap.closed .s-chevron{transform:rotate(180deg)}
 .proj-hd .p-chevron{
+  order:-1;
   width:18px;height:18px;display:flex;align-items:center;justify-content:center;
   color:var(--tx3);flex-shrink:0;
   transition:transform .25s cubic-bezier(.4,0,.2,1);
@@ -100,7 +102,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
 .proj-wrap{border-top:1px solid var(--bd)}
 .proj-wrap:first-child{border-top:none}
 .proj-hd{
-  display:flex;align-items:center;gap:10px;padding:9px 16px;
+  display:flex;align-items:center;gap:10px;padding:9px 16px 9px 48px;
   cursor:pointer;user-select:none;background:var(--sur)
 }
 .proj-hd:hover{background:#fafaf8}
@@ -110,9 +112,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--tx);font-size:14px
 .proj-name-ed{font-size:14px;font-weight:600;cursor:text;padding:1px 4px;border-radius:3px}
 .proj-stats{font-size:11px;color:var(--tx3);display:flex;gap:10px}
 .btn-del-proj{
-  margin-left:6px;width:22px;height:22px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--tx3);cursor:pointer;flex-shrink:0;line-height:1;transition:background .15s,color .15s;
+  margin-left:auto;width:22px;height:22px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:none;background:transparent;color:var(--tx3);cursor:pointer;flex-shrink:0;line-height:1;transition:background .15s,color .15s;
+  opacity:0;
 }
 .btn-del-proj:hover{background:var(--red-bg);color:var(--red-tx);}
+.proj-hd:hover .btn-del-proj{opacity:1;}
 
 /* ─── Add project button ─── */
 .btn-add-proj{
