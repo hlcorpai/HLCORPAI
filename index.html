@@ -2962,7 +2962,7 @@ function renderAll(){
     /* If filters active and this project has no matching tasks, collapse it */
     const filtersActive=activeFilters.proj||activeFilters.person||activeFilters.status||activeFilters.search;
     const defaultClosed = filtersActive && pVisible.length===0;
-    const projClosed = projStates[proj.id]!==undefined ? (projStates[proj.id]?"closed":"") : (defaultClosed?"closed":"");
+    const projClosed = projStates[proj.id]!==undefined ? (projStates[proj.id]?"closed":"") : "closed";
 
     html+=`<div class="proj-wrap ${projClosed}" data-pid="${proj.id}">
       <div class="proj-hd" onclick="toggleProj(this)">
