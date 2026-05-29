@@ -2924,7 +2924,7 @@ function renderAll(){
   const adminAll=TASKS.filter(t=>t.proj==="__admin");
   const adminDone=adminAll.filter(t=>t.status==="完成").length;
   const adminDelay=adminAll.filter(t=>t.status==="延誤").length;
-  const adminClosed = sectionStates["admin"]===true ? "closed" : "";
+  const adminClosed = sectionStates["admin"]===false ? "" : "closed";
 
   html+=`<div class="section-wrap ${adminClosed}" data-sid="admin">
     <div class="section-hd" onclick="toggleSection(this)">
