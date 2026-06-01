@@ -2924,7 +2924,9 @@ function renderAll(){
   const adminAll=TASKS.filter(t=>t.proj==="__admin");
   const adminDone=adminAll.filter(t=>t.status==="完成").length;
   const adminDelay=adminAll.filter(t=>t.status==="延誤").length;
-  const adminClosed = sectionStates["admin"]===false ? "" : "closed";
+  const adminClosed = filtersActive
+    ? (adminTasks.length>0 ? "" : "closed")
+    : (sectionStates["admin"]===false ? "" : "closed");
 
   html+=`<div class="section-wrap ${adminClosed}" data-sid="admin">
     <div class="section-hd" onclick="toggleSection(this)">
@@ -2942,7 +2944,10 @@ function renderAll(){
   </div>`;
 
   /* ── Dev projects section ── */
-  const devClosed = sectionStates["dev"]===true ? "closed" : "";
+  const devHasVisible = PROJECTS.some(p=>TASKS.some(t=>t.proj===p.id&&taskVisible(t)));
+  const devClosed = filtersActive
+    ? (devHasVisible ? "" : "closed")
+    : (sectionStates["dev"]===true ? "closed" : "");
   html+=`<div class="section-wrap ${devClosed}" data-sid="dev">
     <div class="section-hd" onclick="toggleSection(this)">
       <div class="section-icon" style="background:#dde8fa">
@@ -2959,10 +2964,14 @@ function renderAll(){
     const pVisible=TASKS.filter(t=>t.proj===proj.id&&taskVisible(t));
     const pDone=pTasks.filter(t=>t.status==="完成").length;
     const pDelay=pTasks.filter(t=>t.status==="延誤").length;
-    /* If filters active and this project has no matching tasks, collapse it */
+    /* If filters active: expand projects with matching tasks, collapse empty ones */
     const filtersActive=activeFilters.proj||activeFilters.person||activeFilters.status||activeFilters.search;
-    const defaultClosed = filtersActive && pVisible.length===0;
-    const projClosed = projStates[proj.id]!==undefined ? (projStates[proj.id]?"closed":"") : "closed";
+    let projClosed;
+    if(filtersActive){
+      projClosed = pVisible.length>0 ? "" : "closed";
+    } else {
+      projClosed = projStates[proj.id]!==undefined ? (projStates[proj.id]?"closed":"") : "closed";
+    }
 
     html+=`<div class="proj-wrap ${projClosed}" data-pid="${proj.id}">
       <div class="proj-hd" onclick="toggleProj(this)">
