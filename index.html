@@ -3243,10 +3243,19 @@ function updateTaskStatus(sel){
       if(Math.abs(dy)<1) return;
       el.style.transition='none';
       el.style.transform=`translateY(${dy}px)`;
+      el.style.background='var(--sur)';
+      el.style.position='relative';
+      el.style.zIndex='10';
       requestAnimationFrame(()=>{
         el.style.transition='transform 1s cubic-bezier(0.25,0.8,0.25,1)';
         el.style.transform='translateY(0)';
-        el.addEventListener('transitionend',()=>{el.style.transition='';el.style.transform='';},{once:true});
+        el.addEventListener('transitionend',()=>{
+          el.style.transition='';
+          el.style.transform='';
+          el.style.background='';
+          el.style.position='';
+          el.style.zIndex='';
+        },{once:true});
       });
     });
   } else {
