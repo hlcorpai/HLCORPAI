@@ -3202,6 +3202,20 @@ function saveF(el){
   _push();
 }
 
+function sortTasksByStatus(){
+  /* 針對每個 proj+phase 群組，把完成的任務移到最後 */
+  const groups=[...new Set(TASKS.map(t=>t.proj+'||'+t.phase))];
+  groups.forEach(key=>{
+    const [proj,phase]=key.split('||');
+    const indices=TASKS.map((t,i)=>({t,i})).filter(({t})=>t.proj===proj&&t.phase===phase);
+    if(!indices.length) return;
+    const notDone=indices.filter(({t})=>t.status!=='完成');
+    const done=indices.filter(({t})=>t.status==='完成');
+    const sorted=[...notDone,...done].map(({t})=>t);
+    indices.forEach(({i},n)=>{ TASKS[i]=sorted[n]; });
+  });
+}
+
 function updateTaskStatus(sel){
   const t=TASKS.find(x=>x.id===parseInt(sel.dataset.id));
   if(!t) return;
@@ -3522,6 +3536,7 @@ _ref.on("value", snap => {
   if(d.TASKS)    TASKS    = d.TASKS;
   if(d.DSTATUS)  DSTATUS  = d.DSTATUS;
   if(d.PROJECTS) PROJECTS = d.PROJECTS;
+  sortTasksByStatus();
   if(d.title){ const el=document.getElementById("hd-title"); if(el&&document.activeElement!==el) el.innerText=d.title; }
   if(d.meta) { const el=document.getElementById("hd-meta");  if(el&&document.activeElement!==el) el.innerText=d.meta; }
   nextId = Math.max(300, ...TASKS.map(t=>t.id+1));
